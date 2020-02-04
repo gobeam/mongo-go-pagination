@@ -1,5 +1,5 @@
 # Golang Mongo Pagination For Package mongo-go-driver
-[![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/roshanr83/mongo-go-pagination?branch=master)](https://goreportcard.com/report/github.com/roshanr83/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
+[![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/roshanr83/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/roshanr83/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
 
 Simple and easy to use Pagination with information like Total, Page, PerPage, Prev, Next and TotalPage. 
 
