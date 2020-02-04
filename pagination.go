@@ -1,4 +1,4 @@
-package mongoPagination
+package mongopagination
 
 import (
 	"context"
@@ -16,7 +16,7 @@ type Paginator struct {
 	NextPage    int64 `json:"next_page"`
 }
 
-// Pagination struct for returning pagination stat
+// PaginationData struct for returning pagination stat
 type PaginationData struct {
 	Total     int64 `json:"total"`
 	Page      int64 `json:"page"`

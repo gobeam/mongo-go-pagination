@@ -1,4 +1,4 @@
-package mongoPagination
+package mongopagination
 
 import (
 	"context"
