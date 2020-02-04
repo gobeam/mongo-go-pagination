@@ -25,7 +25,7 @@ $ dep ensure -add github.com/roshanr83/mongo-go-pagination
 	var limit int64 = 10
 	var page int64 = 1
 	paging := PagingQuery{
-		collection: db.Collection(DatabaseCollection),
+		collection: db.Collection(DatabaseCollectionName),
 		filter: filter,
 		limit: limit,
 		page: page,
