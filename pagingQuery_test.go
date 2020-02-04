@@ -106,7 +106,6 @@ func TestPagingQuery_Find(t *testing.T) {
 
 }
 
-
 func NewConnection() (a *mongo.Database, b *mongo.Client) {
 	var connectOnce sync.Once
 	var db *mongo.Database
@@ -117,7 +116,6 @@ func NewConnection() (a *mongo.Database, b *mongo.Client) {
 
 	return db, session
 }
-
 
 func connect() (a *mongo.Database, b *mongo.Client) {
 	var err error
