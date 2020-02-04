@@ -1,0 +1,15 @@
+language: go
+sudo: false
+go_import_path: github.com/roshanr83/mongo-go-pagination
+go:
+- 1.9
+services:
+- mongodb
+before_install:
+- go get ./...
+
+script:
+- go test
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
