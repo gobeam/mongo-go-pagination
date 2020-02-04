@@ -1,12 +1,11 @@
-package mongo_go_pagination
+package mongoPagination
 
 import (
 	"context"
 	"math"
 )
 
-// Paginator struct for holding pre pagination
-// stats
+// Paginator struct for holding pagination info
 type Paginator struct {
 	TotalRecord int64 `json:"total_record"`
 	TotalPage   int64 `json:"total_page"`
