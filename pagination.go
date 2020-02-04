@@ -2,19 +2,11 @@ package mongo_go_pagination
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/mongo"
 	"math"
 )
 
-// PaginationParam
-type PaginationParam struct {
-	DB     *mongo.Collection
-	Filter interface{}
-	Page   int64 // Default 1
-	Limit  int64 // Default 10
-}
-
-// Paginator
+// Paginator struct for holding pre pagination
+// stats
 type Paginator struct {
 	TotalRecord int64 `json:"total_record"`
 	TotalPage   int64 `json:"total_page"`
@@ -25,6 +17,7 @@ type Paginator struct {
 	NextPage    int64 `json:"next_page"`
 }
 
+// Pagination struct for returning pagination stat
 type PaginationData struct {
 	Total     int64 `json:"total"`
 	Page      int64 `json:"page"`
@@ -34,6 +27,8 @@ type PaginationData struct {
 	TotalPage int64 `json:"totalPage"`
 }
 
+// PaginationData returns PaginationData struct which
+// holds information of all stats needed for pagination
 func (p *Paginator) PaginationData() *PaginationData {
 	data := PaginationData{
 		Total:     p.TotalRecord,
@@ -53,42 +48,40 @@ func (p *Paginator) PaginationData() *PaginationData {
 	return &data
 }
 
-// Paging
-func Paging(p *PaginationParam) *Paginator {
-	if p.Page < 1 {
-		p.Page = 1
+// Paging returns Paginator struct which hold pagination
+// stats
+func Paging(p *PagingQuery) *Paginator {
+	if p.page < 1 {
+		p.page = 1
 	}
-	if p.Limit == 0 {
-		p.Limit = 10
+	if p.limit == 0 {
+		p.limit = 10
 	}
 	var paginator Paginator
 	var count int64
 	var offset int64
-	total, _ := p.DB.CountDocuments(context.Background(), p.Filter)
+	total, _ := p.collection.CountDocuments(context.Background(), p.filter)
 	count = int64(total)
 
-	if p.Page == 1 {
+	if p.page == 1 {
 		offset = 0
 	} else {
-		offset = (p.Page - 1) * p.Limit
+		offset = (p.page - 1) * p.limit
 	}
 	paginator.TotalRecord = count
-	paginator.Page = p.Page
+	paginator.Page = p.page
 	paginator.Offset = offset
-	paginator.Limit = p.Limit
-	paginator.TotalPage = int64(math.Ceil(float64(count) / float64(p.Limit)))
-	if p.Page > 1 {
-		paginator.PrevPage = p.Page - 1
+	paginator.Limit = p.limit
+	paginator.TotalPage = int64(math.Ceil(float64(count) / float64(p.limit)))
+	if p.page > 1 {
+		paginator.PrevPage = p.page - 1
 	} else {
-		paginator.PrevPage = p.Page
+		paginator.PrevPage = p.page
 	}
-	if p.Page == paginator.TotalPage {
-		paginator.NextPage = p.Page
+	if p.page == paginator.TotalPage {
+		paginator.NextPage = p.page
 	} else {
-		paginator.NextPage = p.Page + 1
+		paginator.NextPage = p.page + 1
 	}
 	return &paginator
 }
-
-
-

@@ -19,26 +19,24 @@ type TodoTest struct {
 
 /**
 Constants
- */
+*/
 const (
-	DatabaseHost  string = "mongodb://localhost:27017"
-	DatabaseName string = "todo"
+	DatabaseHost       string = "mongodb://localhost:27017"
+	DatabaseName       string = "todo"
 	DatabaseCollection string = "TodoTest"
 )
 
-
 /**
 Cleanup seeded data
- */
+*/
 func cleanup(db *mongo.Database) (err error) {
 	err = db.Collection(DatabaseCollection).Drop(context.Background())
 	return
 }
 
-
 /**
 Insert data
- */
+*/
 func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 	result, err := db.Collection(DatabaseCollection).InsertMany(
 		context.Background(),
@@ -69,13 +67,12 @@ func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 				{"createdAt", time.Now()},
 			},
 		})
-	return  result.InsertedIDs , err
+	return result.InsertedIDs, err
 }
-
 
 /**
 Testing Find
- */
+*/
 func TestPagingQuery_Find(t *testing.T) {
 	_, session := NewConnection()
 	db := session.Database(DatabaseName)
@@ -91,11 +88,11 @@ func TestPagingQuery_Find(t *testing.T) {
 	var page int64 = 1
 	paging := PagingQuery{
 		collection: db.Collection(DatabaseCollection),
-		filter: filter,
-		limit: limit,
-		page: page,
-		sortField: "createdAt",
-		sortValue: -1,
+		filter:     filter,
+		limit:      limit,
+		page:       page,
+		sortField:  "createdAt",
+		sortValue:  -1,
 	}
 	paginatedData, err := paging.Find()
 	if err != nil {
@@ -114,14 +111,6 @@ func TestPagingQuery_Find(t *testing.T) {
 		t.Errorf("False Pagination data")
 	}
 
-	//var lists []TodoTest
-	//for _, raw := range paginatedData.Data {
-	//	var todo TodoTest
-	//	if err := bson.Unmarshal(raw, &todo); err == nil {
-	//		lists = append(lists, todo)
-	//	}
-	//}
-
 	err = cleanup(db)
 	if err != nil {
 		t.Errorf("Error while cleanup. Error: %s", err.Error())
@@ -131,7 +120,7 @@ func TestPagingQuery_Find(t *testing.T) {
 
 /**
 New Connection
- */
+*/
 func NewConnection() (a *mongo.Database, b *mongo.Client) {
 	var connectOnce sync.Once
 	var db *mongo.Database
@@ -145,7 +134,7 @@ func NewConnection() (a *mongo.Database, b *mongo.Client) {
 
 /**
 Connect to mongo
- */
+*/
 func connect() (a *mongo.Database, b *mongo.Client) {
 	var err error
 	session, err := mongo.NewClient(options.Client().ApplyURI(DatabaseHost))
