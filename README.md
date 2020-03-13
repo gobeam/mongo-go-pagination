@@ -20,6 +20,9 @@ $ dep ensure -add github.com/roshanr83/mongo-go-pagination
 ## Demo
 
 ``` go
+import (
+	. "github.com/roshanr83/mongo-go-pagination"
+	)
 
     filter := bson.M{}
 	var limit int64 = 10
