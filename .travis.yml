@@ -1,6 +1,6 @@
 language: go
 sudo: false
-go_import_path: github.com/roshanr83/mongo-go-pagination
+go_import_path: github.com/gobeam/mongo-go-pagination
 go:
 - 1.9
 services:
