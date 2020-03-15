@@ -1,5 +1,5 @@
 # Golang Mongo Pagination For Package mongo-go-driver
-[![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/roshanr83/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/roshanr83/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
+[![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/gobeam/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/gobeam/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
 
 Simple and easy to use Pagination with information like Total, Page, PerPage, Prev, Next and TotalPage. 
 
@@ -7,13 +7,13 @@ Simple and easy to use Pagination with information like Total, Page, PerPage, Pr
 ## Install
 
 ``` bash
-$ go get -u -v github.com/roshanr83/mongo-go-pagination
+$ go get -u -v github.com/gobeam/mongo-go-pagination
 ```
 
 or with dep
 
 ``` bash
-$ dep ensure -add github.com/roshanr83/mongo-go-pagination
+$ dep ensure -add github.com/gobeam/mongo-go-pagination
 ```
 
 
@@ -21,7 +21,7 @@ $ dep ensure -add github.com/roshanr83/mongo-go-pagination
 
 ``` go
 import (
-	. "github.com/roshanr83/mongo-go-pagination"
+	. "github.com/gobeam/mongo-go-pagination"
 	)
 
     filter := bson.M{}
