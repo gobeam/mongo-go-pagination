@@ -30,13 +30,13 @@ type PaginatedData struct {
 // Find returns two value pagination data with document queried from mongodb and
 // error if any error occurs during document query
 func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
-	skip := getSkip(paging.page, paging.limit)
+	skip := getSkip(paging.Page, paging.Limit)
 	opt := &options.FindOptions{
 		Skip:  &skip,
-		Sort:  bson.D{{paging.sortField, paging.sortValue}},
-		Limit: &paging.limit,
+		Sort:  bson.D{{paging.SortField, paging.SortValue}},
+		Limit: &paging.Limit,
 	}
-	cursor, err := paging.collection.Find(context.Background(), paging.filter, opt)
+	cursor, err := paging.Collection.Find(context.Background(), paging.Filter, opt)
 	if err != nil {
 		return nil, err
 	}
