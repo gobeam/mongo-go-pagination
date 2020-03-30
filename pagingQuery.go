@@ -30,6 +30,8 @@ type PaginatedData struct {
 // Find returns two value pagination data with document queried from mongodb and
 // error if any error occurs during document query
 func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
+	paginationInfoChan := make(chan *Paginator, 1)
+	Paging(paging, paginationInfoChan)
 	skip := getSkip(paging.Page, paging.Limit)
 	opt := &options.FindOptions{
 		Skip:  &skip,
@@ -48,9 +50,9 @@ func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
 			docs = append(docs, *document)
 		}
 	}
-	paginator := Paging(paging)
+	paginationInfo := <- paginationInfoChan
 	result := PaginatedData{
-		Pagination: *paginator.PaginationData(),
+		Pagination: *paginationInfo.PaginationData(),
 		Data:       docs,
 	}
 	return &result, nil

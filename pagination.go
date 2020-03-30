@@ -49,7 +49,7 @@ func (p *Paginator) PaginationData() *PaginationData {
 
 // Paging returns Paginator struct which hold pagination
 // stats
-func Paging(p *PagingQuery) *Paginator {
+func Paging(p *PagingQuery, paginationInfo chan<- *Paginator) {
 	if p.Page < 1 {
 		p.Page = 1
 	}
@@ -82,5 +82,5 @@ func Paging(p *PagingQuery) *Paginator {
 	} else {
 		paginator.NextPage = p.Page + 1
 	}
-	return &paginator
+	paginationInfo <- &paginator
 }
