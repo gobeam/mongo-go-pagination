@@ -59,9 +59,6 @@ func main() {
 	// print pagination data
 	fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
 
-
-
-
 	//Example for Aggregation
 
 	//match query

@@ -94,22 +94,13 @@ func TestPagingQuery_Find(t *testing.T) {
 	}
 
 	if paginatedData.Pagination.Total != 5 || paginatedData.Pagination.Page != 1 {
-		t.Errorf("False Pagination data")
+		t.Errorf("False Pagination data should be 5 but got: %d", paginatedData.Pagination.Total)
 	}
 
+	// Aggregate pipeline pagination test
 	match := bson.M{"$match": bson.M{"status": "active"}}
-	facet := bson.M{"$facet": bson.M{
-		"edges": []bson.M{
-			{"$sort": bson.M{"createdAt": -1}},
-			{"$skip": 0},
-			{"$limit": 10},
-		},
-	},
-	}
 
-	aggregateFilter := []bson.M{match, facet}
-
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Filter(aggregateFilter).Aggregate()
+	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Aggregate(match)
 	if err != nil {
 		t.Errorf("Error while Aggregation pagination. Error: %s", err.Error())
 	}
