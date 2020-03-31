@@ -29,17 +29,20 @@ func main() {
 	var limit int64 = 10
 	var page int64 = 1
 	collection := client.Database("db_name").Collection("collection_name")
-
+	projection := bson.D{
+		{"task_name", 1},
+	}
 	// Querying paginated data
 	paging := PagingQuery{
 		Collection: collection,
 		Filter:     filter,
 		Limit:      limit,
 		Page:       page,
+		Projection: projection,
 		SortField:  "createdAt",
 		SortValue:  -1,
 	}
-	paginatedData, err := paging.Find()
+	paginatedData, err := paging.Paginate()
 
 	// paginated data is in paginatedData.Data
 	// pagination info can be accessed in  paginatedData.Pagination
