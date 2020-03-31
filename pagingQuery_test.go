@@ -74,15 +74,20 @@ func TestPagingQuery_Find(t *testing.T) {
 	filter := bson.M{}
 	var limit int64 = 10
 	var page int64 = 1
+	projection := bson.D{
+		{"title", 1},
+		{"status", 1},
+	}
 	paging := PagingQuery{
 		Collection: db.Collection(DatabaseCollection),
+		Projection: projection,
 		Filter:     filter,
 		Limit:      limit,
 		Page:       page,
 		SortField:  "createdAt",
 		SortValue:  -1,
 	}
-	paginatedData, err := paging.Find()
+	paginatedData, err := paging.Paginate()
 	if err != nil {
 		t.Errorf("Error while pagination. Error: %s", err.Error())
 	}

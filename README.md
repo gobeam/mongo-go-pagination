@@ -20,8 +20,6 @@ $ dep ensure -add github.com/gobeam/mongo-go-pagination
 ## Demo
 
 ``` go
-package main
-
 import (
 	"context"
 	. "github.com/gobeam/mongo-go-pagination"
@@ -32,7 +30,7 @@ import (
 )
 
 type ToDo struct {
-	TaskName string `json:"task_name"`
+	TaskName   string `json:"task_name"`
 	TaskStatus string `json:"task_status"`
 }
 
@@ -47,16 +45,20 @@ func main() {
 	// making example filter
 	filter := bson.M{}
 	filter["status"] = 1
-	
+
 	var limit int64 = 10
 	var page int64 = 1
-	
+	collection := client.Database("db_name").Collection("collection_name")
+	projection := bson.D{
+		{"task_name", 1},
+	}
 	// Querying paginated data
 	paging := PagingQuery{
-		Collection: client.Database("db_name").Collection("collection_name"),
+		Collection: collection,
 		Filter:     filter,
 		Limit:      limit,
 		Page:       page,
+		Projection: projection,
 		SortField:  "createdAt",
 		SortValue:  -1,
 	}

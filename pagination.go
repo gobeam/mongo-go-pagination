@@ -1,7 +1,6 @@
 package mongopagination
 
 import (
-	"context"
 	"math"
 )
 
@@ -59,7 +58,7 @@ func Paging(p *PagingQuery, paginationInfo chan<- *Paginator) {
 	var paginator Paginator
 	var count int64
 	var offset int64
-	total, _ := p.Collection.CountDocuments(context.Background(), p.Filter)
+	total, _ := p.Collection.CountDocuments(p.Ctx, p.Filter)
 	count = int64(total)
 
 	if p.Page == 1 {

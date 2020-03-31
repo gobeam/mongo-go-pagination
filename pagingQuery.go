@@ -14,6 +14,7 @@ import (
 type PagingQuery struct {
 	Collection *mongo.Collection
 	Filter     interface{}
+	Projection interface{}
 	SortField  string
 	SortValue  int
 	Limit      int64
@@ -29,7 +30,7 @@ type PaginatedData struct {
 
 // Find returns two value pagination data with document queried from mongodb and
 // error if any error occurs during document query
-func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
+func (paging *PagingQuery) Paginate() (paginatedData *PaginatedData, err error) {
 	paginationInfoChan := make(chan *Paginator, 1)
 	Paging(paging, paginationInfoChan)
 	skip := getSkip(paging.Page, paging.Limit)
@@ -37,6 +38,9 @@ func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
 		Skip:  &skip,
 		Sort:  bson.D{{paging.SortField, paging.SortValue}},
 		Limit: &paging.Limit,
+	}
+	if paging.Projection != nil {
+		opt.Projection = paging.Projection
 	}
 	cursor, err := paging.Collection.Find(context.Background(), paging.Filter, opt)
 	if err != nil {
@@ -50,7 +54,7 @@ func (paging *PagingQuery) Find() (paginatedData *PaginatedData, err error) {
 			docs = append(docs, *document)
 		}
 	}
-	paginationInfo := <- paginationInfoChan
+	paginationInfo := <-paginationInfoChan
 	result := PaginatedData{
 		Pagination: *paginationInfo.PaginationData(),
 		Data:       docs,
