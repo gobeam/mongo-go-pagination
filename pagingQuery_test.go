@@ -78,16 +78,9 @@ func TestPagingQuery_Find(t *testing.T) {
 		{"title", 1},
 		{"status", 1},
 	}
-	paging := PagingQuery{
-		Collection: db.Collection(DatabaseCollection),
-		Projection: projection,
-		Filter:     filter,
-		Limit:      limit,
-		Page:       page,
-		SortField:  "createdAt",
-		SortValue:  -1,
-	}
-	paginatedData, err := paging.Paginate()
+	collection := db.Collection(DatabaseCollection)
+	paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
+
 	if err != nil {
 		t.Errorf("Error while pagination. Error: %s", err.Error())
 	}
@@ -102,6 +95,28 @@ func TestPagingQuery_Find(t *testing.T) {
 
 	if paginatedData.Pagination.Total != 5 || paginatedData.Pagination.Page != 1 {
 		t.Errorf("False Pagination data")
+	}
+
+	match := bson.M{"$match": bson.M{"status": "active"}}
+	facet := bson.M{"$facet": bson.M{
+		"edges": []bson.M{
+			{"$sort": bson.M{"createdAt": -1}},
+			{"$skip": 0},
+			{"$limit": 10},
+		},
+	},
+	}
+
+	aggregateFilter := []bson.M{match, facet}
+
+	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Filter(aggregateFilter).Aggregate()
+	if err != nil {
+		t.Errorf("Error while Aggregation pagination. Error: %s", err.Error())
+	}
+
+	if aggPaginatedData == nil {
+		t.Errorf("Empty Aggregated Pagination data error")
+		return
 	}
 
 	err = cleanup(db)
