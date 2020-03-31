@@ -3,8 +3,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/go-stack/stack v1.8.0 h1:5SgMzNM5HxrEjV0ww2lTmX6E2Izsfxas4+YHWRs3Lsk=
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
-github.com/gobeam/mongo-go-pagination v0.0.0-20200329125402-04dd2cbd0725 h1:+nfKcbIsFFM5wu1JuZ9t9DT2mie5xHO6YaydIMAJl0k=
-github.com/gobeam/mongo-go-pagination v0.0.0-20200329125402-04dd2cbd0725/go.mod h1:gW+zcd5oNSU0ZvXiUtKU5fRuBMgW4uJ/N1pUZMfg+gE=
+github.com/gobeam/mongo-go-pagination v0.0.0-20200331044605-47da9c9b5163 h1:qp99OpliBgVNCu5DgH0n6UHCAjHRnrNKX+5Gv96kOP4=
+github.com/gobeam/mongo-go-pagination v0.0.0-20200331044605-47da9c9b5163/go.mod h1:gW+zcd5oNSU0ZvXiUtKU5fRuBMgW4uJ/N1pUZMfg+gE=
 github.com/gobuffalo/attrs v0.0.0-20190224210810-a9411de4debd/go.mod h1:4duuawTqi2wkkpB4ePgWMaai6/Kc6WEz83bhFwpHzj0=
 github.com/gobuffalo/depgen v0.0.0-20190329151759-d478694a28d3/go.mod h1:3STtPUQYuzV0gBVOY3vy6CfMm/ljR4pABfrTeHNLHUY=
 github.com/gobuffalo/depgen v0.1.0/go.mod h1:+ifsuy7fhi15RWncXQQKjWS9JPkdah5sZvtHc2RXGlg=
