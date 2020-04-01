@@ -18,6 +18,7 @@ $ dep ensure -add github.com/gobeam/mongo-go-pagination
 
 
 ## For Aggregation Pipelines Query
+
 ``` go
 package main
 
@@ -108,6 +109,7 @@ func main() {
     		{"qty", 1},
     	}
     	// Querying paginated data
+    	// Sort and select are optional
     	paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
     	if err != nil {
     		panic(err)
