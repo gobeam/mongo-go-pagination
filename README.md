@@ -1,7 +1,7 @@
 # Golang Mongo Pagination For Package mongo-go-driver
 [![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/gobeam/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/gobeam/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
 
-Simple and easy to use Pagination with information like Total, Page, PerPage, Prev, Next and TotalPage. 
+For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. 
 
 
 ## Install
@@ -84,10 +84,11 @@ func main() {
 
 
 
-	//Example for Aggregation
+	//Example for Aggregation you dont have to worry about skipping and limit,
+	// just pass single or multiple query according to your business logic
 
 	//match query
-	match := bson.M{"$match": bson.M{"qty": bson.M{"$gt": 10}}}
+	matchQuery := bson.M{"$match": bson.M{"qty": bson.M{"$gt": 10}}}
 
 	//group query
 	projectQuery := bson.M{"$project": bson.M{"_id": 1, "qty": 1}}
@@ -95,7 +96,7 @@ func main() {
 	// you can easily chain function and pass multiple query like here we are passing match
 	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Aggregate(match, projectQuery)
+	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Aggregate(matchQuery, projectQuery)
 	if err != nil {
 		panic(err)
 	}
@@ -129,6 +130,11 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
+
+## Acknowledgments
+<ol>
+<li> https://github.com/mongodb/mongo-go-driver </li>
+</ol>
 
 
 ## MIT License
