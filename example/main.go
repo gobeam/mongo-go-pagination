@@ -58,35 +58,4 @@ func main() {
 
 	// print pagination data
 	fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
-
-	//Example for Aggregation
-
-	//match query
-	match := bson.M{"$match": bson.M{"qty": bson.M{"$gt": 10}}}
-
-	//group query
-	projectQuery := bson.M{"$project": bson.M{"_id": 1, "qty": 1}}
-
-	// you can easily chain function and pass multiple query like here we are passing match
-	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
-	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Aggregate(match, projectQuery)
-	if err != nil {
-		panic(err)
-	}
-
-	var aggProductList []Product
-	for _, raw := range aggPaginatedData.Data {
-		var product *Product
-		if marshallErr := bson.Unmarshal(raw, &product); marshallErr == nil {
-			aggProductList = append(aggProductList, *product)
-		}
-
-	}
-
-	// print ProductList
-	fmt.Printf("Aggregate Product List: %+v\n", aggProductList)
-
-	// print pagination data
-	fmt.Printf("Aggregate Pagination Data: %+v\n", aggPaginatedData.Data)
 }
