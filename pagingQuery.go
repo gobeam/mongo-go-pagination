@@ -147,15 +147,17 @@ func (paging *pagingQuery) Aggregate(filters ...interface{}) (paginatedData *Pag
 			docs = append(docs, *document)
 		}
 	}
-	paginationInfoChan := make(chan *Paginator, 1)
-	Paging(paging, paginationInfoChan, true)
 
 	var data []bson.Raw
-	paginationInfo := <-paginationInfoChan
+	var aggCount int64
+
 	if len(docs) > 0 && len(docs[0].Data) > 0 {
-		paginationInfo.TotalRecord = docs[0].Total[0].Count
+		aggCount = docs[0].Total[0].Count
 		data = docs[0].Data
 	}
+	paginationInfoChan := make(chan *Paginator, 1)
+	Paging(paging, paginationInfoChan, true, aggCount)
+	paginationInfo := <-paginationInfoChan
 	result := PaginatedData{
 		Pagination: *paginationInfo.PaginationData(),
 		Data:       data,
@@ -176,7 +178,7 @@ func (paging *pagingQuery) Find() (paginatedData *PaginatedData, err error) {
 
 	// get Pagination Info
 	paginationInfoChan := make(chan *Paginator, 1)
-	Paging(paging, paginationInfoChan, false)
+	Paging(paging, paginationInfoChan, false, 0)
 
 	// set options for sorting and skipping
 	skip := getSkip(paging.PageCount, paging.LimitCount)

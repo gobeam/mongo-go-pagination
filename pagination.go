@@ -49,7 +49,7 @@ func (p *Paginator) PaginationData() *PaginationData {
 
 // Paging returns Paginator struct which hold pagination
 // stats
-func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool) {
+func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool, aggCount int64) {
 	if p.PageCount < 1 {
 		p.PageCount = 1
 	}
@@ -62,6 +62,8 @@ func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool) {
 	if !aggregate {
 		total, _ := p.Collection.CountDocuments(context.Background(), p.FilterQuery)
 		count = int64(total)
+	} else {
+		count = aggCount
 	}
 
 	if p.PageCount == 1 {
