@@ -5,13 +5,10 @@ go:
 - 1.9
 services:
 - mongodb
-- ruby-coveralls
 before_install:
 - go get ./...
+- go get github.com/mattn/goveralls
 
 script:
 - go test
-
-after_success:
-- bash <(curl -s https://codecov.io/bash)
-- coveralls
+- $GOPATH/bin/goveralls -service=travis-ci
