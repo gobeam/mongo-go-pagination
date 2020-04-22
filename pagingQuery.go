@@ -102,7 +102,7 @@ func (paging *pagingQuery) Sort(sortField string, sortValue int) PagingQuery {
 
 // validateQuery query is to check if user has added certain required params or not
 func (paging *pagingQuery) validateQuery() error {
-	if paging.LimitCount < 0 || paging.PageCount < 0 {
+	if paging.LimitCount <= 0 || paging.PageCount <= 0 {
 		return errors.New(PageLimitError)
 	}
 	return nil

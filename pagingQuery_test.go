@@ -83,6 +83,21 @@ func TestPagingQuery_Find(t *testing.T) {
 		t.Errorf("False Pagination data should be 20 but got: %d", paginatedData.Pagination.Total)
 	}
 
+	// no limit or page provided error
+	_, noLimitOrPageError := New(collection).Sort("price", -1).Select(projection).Filter(filter).Find()
+	if noLimitOrPageError == nil {
+		t.Errorf("Error expected but got no error")
+	}
+
+	// no filter error
+	_, noFilterError := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Find()
+	if noFilterError == nil {
+		t.Errorf("Error expected but got no error")
+	}
+
+	// getting page 2 data
+	page = 2
+
 	// Aggregate pipeline pagination test
 	match := bson.M{"$match": bson.M{"status": "active"}}
 
@@ -94,6 +109,25 @@ func TestPagingQuery_Find(t *testing.T) {
 	if aggPaginatedData == nil {
 		t.Errorf("Empty Aggregated Pagination data error")
 		return
+	}
+
+	// Aggregation error match query test
+	faultyMatch := bson.M{"$matches": bson.M{"status": "active"}}
+	_, faultyMatchQuery := New(collection).Sort("price", -1).Aggregate(faultyMatch)
+	if faultyMatchQuery == nil {
+		t.Errorf("Error expected but got no error")
+	}
+
+	// no limit or page provided error
+	_, noLimitOrPageAggError := New(collection).Sort("price", -1).Aggregate(match)
+	if noLimitOrPageAggError == nil {
+		t.Errorf("Error expected but got no error")
+	}
+
+	// filter in aggregate error
+	_, noFilterAggError := New(collection).Limit(limit).Page(page).Filter(filter).Sort("price", -1).Aggregate(match)
+	if noFilterAggError == nil {
+		t.Errorf("Error expected but got no error")
 	}
 }
 
