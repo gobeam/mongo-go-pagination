@@ -2,13 +2,13 @@ language: go
 sudo: false
 go_import_path: github.com/gobeam/mongo-go-pagination
 go:
-- 1.9
+  - 1.9
 services:
-- mongodb
+  - mongodb
 before_install:
-- go get ./...
-- go get github.com/mattn/goveralls
+  - go get ./...
+  - go get github.com/mattn/goveralls
 
 script:
-- go test .
-- $GOPATH/bin/goveralls -service=travis-ci
+  - go test -cover -coverprofile=.coverprofile $(go list .)
+  - $GOPATH/bin/goveralls -service=travis-ci -coverprofile=.coverprofile
