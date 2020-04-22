@@ -50,12 +50,6 @@ func (p *Paginator) PaginationData() *PaginationData {
 // Paging returns Paginator struct which hold pagination
 // stats
 func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool, aggCount int64) {
-	if p.PageCount < 1 {
-		p.PageCount = 1
-	}
-	if p.LimitCount == 0 {
-		p.LimitCount = 10
-	}
 	var paginator Paginator
 	var offset int64
 	var count int64

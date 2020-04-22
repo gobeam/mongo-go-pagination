@@ -2,6 +2,7 @@ package mongopagination
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -29,41 +30,26 @@ func cleanup(db *mongo.Database) (err error) {
 }
 
 func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
-	result, err := db.Collection(DatabaseCollection).InsertMany(
-		context.Background(),
-		[]interface{}{
-			bson.D{
-				{"title", "todo1"},
-				{"status", "active"},
-				{"createdAt", time.Now()},
-			},
-			bson.D{
-				{"title", "todo2"},
-				{"status", "active"},
-				{"createdAt", time.Now()},
-			},
-			bson.D{
-				{"title", "todo3"},
-				{"status", "inactive"},
-				{"createdAt", time.Now()},
-			},
-			bson.D{
-				{"title", "todo4"},
-				{"status", "active"},
-				{"createdAt", time.Now()},
-			},
-			bson.D{
-				{"title", "todo5"},
-				{"status", "inactive"},
-				{"createdAt", time.Now()},
-			},
+	var data []interface{}
+	for i := 0; i < 20; i++ {
+		data = append(data, bson.M{
+			"title":     fmt.Sprintf("todo-%d", i),
+			"status":    "active",
+			"createdAt": time.Now(),
 		})
-	return result.InsertedIDs, err
+	}
+	result, err := db.Collection(DatabaseCollection).InsertMany(
+		context.Background(), data)
+	if err != nil {
+		return nil, err
+	}
+	return result.InsertedIDs, nil
 }
 
 func TestPagingQuery_Find(t *testing.T) {
 	_, session := NewConnection()
 	db := session.Database(DatabaseName)
+	defer cleanup(db)
 	insertedIds, err := insertExamples(db)
 	if len(insertedIds) < 1 {
 		t.Errorf("Empty insert ids")
@@ -73,7 +59,7 @@ func TestPagingQuery_Find(t *testing.T) {
 	}
 	filter := bson.M{}
 	var limit int64 = 10
-	var page int64 = 1
+	var page int64 = 0
 	projection := bson.D{
 		{"title", 1},
 		{"status", 1},
@@ -93,8 +79,8 @@ func TestPagingQuery_Find(t *testing.T) {
 		t.Errorf("Error fetching data")
 	}
 
-	if paginatedData.Pagination.Total != 5 || paginatedData.Pagination.Page != 1 {
-		t.Errorf("False Pagination data should be 5 but got: %d", paginatedData.Pagination.Total)
+	if paginatedData.Pagination.Total != 20 || paginatedData.Pagination.Page != 1 {
+		t.Errorf("False Pagination data should be 20 but got: %d", paginatedData.Pagination.Total)
 	}
 
 	// Aggregate pipeline pagination test
@@ -109,12 +95,6 @@ func TestPagingQuery_Find(t *testing.T) {
 		t.Errorf("Empty Aggregated Pagination data error")
 		return
 	}
-
-	err = cleanup(db)
-	if err != nil {
-		t.Errorf("Error while cleanup. Error: %s", err.Error())
-	}
-
 }
 
 func NewConnection() (a *mongo.Database, b *mongo.Client) {

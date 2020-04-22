@@ -75,13 +75,21 @@ func (paging *pagingQuery) Filter(criteria interface{}) PagingQuery {
 
 // Limit is to add limit for pagination
 func (paging *pagingQuery) Limit(limit int64) PagingQuery {
-	paging.LimitCount = limit
+	if limit < 1 {
+		paging.LimitCount = 10
+	} else {
+		paging.LimitCount = limit
+	}
 	return paging
 }
 
 // Page is to specify which page to serve in mongo paginated result
 func (paging *pagingQuery) Page(page int64) PagingQuery {
-	paging.PageCount = page
+	if page < 1 {
+		paging.PageCount = 1
+	} else {
+		paging.PageCount = page
+	}
 	return paging
 }
 
