@@ -5,6 +5,7 @@ go:
 - 1.9
 services:
 - mongodb
+- ruby-coveralls
 before_install:
 - go get ./...
 
