@@ -97,6 +97,7 @@ func TestPagingQuery_Find(t *testing.T) {
 
 	// getting page 2 data
 	page = 2
+	limit = 0 // defaults to 10
 
 	// Aggregate pipeline pagination test
 	match := bson.M{"$match": bson.M{"status": "active"}}
