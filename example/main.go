@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// Product struct
 type Product struct {
 	Id       primitive.ObjectID `json:"_id" bson:"_id"`
 	Name     string             `json:"name" bson:"name"`
