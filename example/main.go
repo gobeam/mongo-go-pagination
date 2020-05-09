@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	. "github.com/gobeam/mongo-go-pagination"
+	paginate "github.com/gobeam/mongo-go-pagination"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -31,33 +31,33 @@ func main() {
 	var limit int64 = 10
 	var page int64 = 1
 	collection := client.Database("myaggregate").Collection("stocks")
-	//projection := bson.D{
-	//	{"name", 1},
-	//	{"qty", 1},
-	//}
-	//// Querying paginated data
-	//paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//// paginated data is in paginatedData.Data
-	//// pagination info can be accessed in  paginatedData.Pagination
-	//// if you want to marshal data to your defined struct
-	//
-	//var lists []Product
-	//for _, raw := range paginatedData.Data {
-	//	var product *Product
-	//	if marshallErr := bson.Unmarshal(raw, &product); marshallErr == nil {
-	//		lists = append(lists, *product)
-	//	}
-	//
-	//}
-	//// print ProductList
-	//fmt.Printf("Norm Find Data: %+v\n", lists)
-	//
-	//// print pagination data
-	//fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
+	projection := bson.D{
+		{"name", 1},
+		{"qty", 1},
+	}
+	// Querying paginated data
+	paginatedData, err := paginate.New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
+	if err != nil {
+		panic(err)
+	}
+
+	// paginated data is in paginatedData.Data
+	// pagination info can be accessed in  paginatedData.Pagination
+	// if you want to marshal data to your defined struct
+
+	var lists []Product
+	for _, raw := range paginatedData.Data {
+		var product *Product
+		if marshallErr := bson.Unmarshal(raw, &product); marshallErr == nil {
+			lists = append(lists, *product)
+		}
+
+	}
+	// print ProductList
+	fmt.Printf("Norm Find Data: %+v\n", lists)
+
+	// print pagination data
+	fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
 
 	//Example for Aggregation
 
@@ -70,7 +70,7 @@ func main() {
 	// you can easily chain function and pass multiple query like here we are passing match
 	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Aggregate(match, projectQuery)
+	aggPaginatedData, err := paginate.New(collection).Limit(limit).Page(page).Aggregate(match, projectQuery)
 	if err != nil {
 		panic(err)
 	}
