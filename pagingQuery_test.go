@@ -59,7 +59,7 @@ func TestPagingQuery_Find(t *testing.T) {
 	}
 	filter := bson.M{}
 	var limit int64 = 10
-	var page int64 = 0
+	var page int64
 	projection := bson.D{
 		{"title", 1},
 		{"status", 1},
