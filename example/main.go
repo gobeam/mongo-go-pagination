@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Example for Normal Find query
-	//filter := bson.M{}
+	filter := bson.M{}
 	var limit int64 = 10
 	var page int64 = 1
 	collection := client.Database("myaggregate").Collection("stocks")
