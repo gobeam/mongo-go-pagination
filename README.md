@@ -64,7 +64,7 @@ func main() {
 	// you can easily chain function and pass multiple query like here we are passing match
 	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Aggregate(match, projectQuery)
+	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
 	if err != nil {
 		panic(err)
 	}

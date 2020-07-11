@@ -130,6 +130,13 @@ func TestPagingQuery_Find(t *testing.T) {
 	if noFilterAggError == nil {
 		t.Errorf("Error expected but got no error")
 	}
+
+	// without sorting test
+	_, sortProvideTest := New(collection).Aggregate(match)
+	if sortProvideTest == nil {
+		t.Errorf("data expected")
+		return
+	}
 }
 
 func NewConnection() (a *mongo.Database, b *mongo.Client) {

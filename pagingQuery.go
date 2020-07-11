@@ -126,14 +126,16 @@ func (paging *pagingQuery) Aggregate(filters ...interface{}) (paginatedData *Pag
 		aggregationFilter = append(aggregationFilter, filter.(bson.M))
 	}
 	skip := getSkip(paging.PageCount, paging.LimitCount)
+	facetData := make([]bson.M, 1)
+	facetData[0] = bson.M{"$skip": skip}
+	facetData[0] = bson.M{"$limit": paging.LimitCount}
+	if paging.SortField != "" {
+		facetData[0] = bson.M{"$sort": bson.M{paging.SortField: paging.SortValue}}
+	}
 
 	// making facet aggregation pipeline for result and total document count
 	facet := bson.M{"$facet": bson.M{
-		"data": []bson.M{
-			{"$sort": bson.M{"createdAt": -1}},
-			{"$skip": skip},
-			{"$limit": paging.LimitCount},
-		},
+		"data":  facetData,
 		"total": []bson.M{{"$count": "count"}},
 	},
 	}
