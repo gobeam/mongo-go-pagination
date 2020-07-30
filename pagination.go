@@ -54,16 +54,15 @@ func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool, ag
 	var offset int64
 	var count int64
 	if !aggregate {
-		total, _ := p.Collection.CountDocuments(context.Background(), p.FilterQuery)
-		count = int64(total)
+		count, _ = p.Collection.CountDocuments(context.Background(), p.FilterQuery)
 	} else {
 		count = aggCount
 	}
 
-	if p.PageCount == 1 {
-		offset = 0
-	} else {
+	if p.PageCount > 0 {
 		offset = (p.PageCount - 1) * p.LimitCount
+	} else {
+		offset = 0
 	}
 	paginator.TotalRecord = count
 	paginator.Page = p.PageCount
