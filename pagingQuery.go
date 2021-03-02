@@ -21,10 +21,9 @@ const (
 // and sort value
 type pagingQuery struct {
 	Collection  *mongo.Collection
-	SortField   string
+	SortFields  bson.D
 	Project     interface{}
 	FilterQuery interface{}
-	SortValue   int
 	LimitCount  int64
 	PageCount   int64
 }
@@ -95,8 +94,10 @@ func (paging *pagingQuery) Page(page int64) PagingQuery {
 
 // Sort is to sor mongo result by certain key
 func (paging *pagingQuery) Sort(sortField string, sortValue int) PagingQuery {
-	paging.SortField = sortField
-	paging.SortValue = sortValue
+	sortQuery := bson.E{}
+	sortQuery.Key = sortField
+	sortQuery.Value = sortValue
+	paging.SortFields = append(paging.SortFields, sortQuery)
 	return paging
 }
 
@@ -129,9 +130,14 @@ func (paging *pagingQuery) Aggregate(filters ...interface{}) (paginatedData *Pag
 	var facetData []bson.M
 	facetData = append(facetData, bson.M{"$skip": skip})
 	facetData = append(facetData, bson.M{"$limit": paging.LimitCount})
-	if paging.SortField != "" {
-		facetData = append(facetData, bson.M{"$sort": bson.M{paging.SortField: paging.SortValue}})
+
+	if len(paging.SortFields) > 0 {
+		facetData = append(facetData, bson.M{"$sort": paging.SortFields})
 	}
+
+	//if paging.SortField != "" {
+	//	facetData = append(facetData, bson.M{"$sort": bson.M{paging.SortField: paging.SortValue}})
+	//}
 	// making facet aggregation pipeline for result and total document count
 	facet := bson.M{"$facet": bson.M{
 		"data":  facetData,
@@ -198,8 +204,8 @@ func (paging *pagingQuery) Find() (paginatedData *PaginatedData, err error) {
 	if paging.Project != nil {
 		opt.SetProjection(paging.Project)
 	}
-	if paging.SortField != "" && paging.SortValue != 0 {
-		opt.SetSort(bson.D{{paging.SortField, paging.SortValue}})
+	if len(paging.SortFields) > 0 {
+		opt.SetSort(paging.SortFields)
 	}
 	cursor, err := paging.Collection.Find(context.Background(), paging.FilterQuery, opt)
 	if err != nil {

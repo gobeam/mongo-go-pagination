@@ -37,7 +37,7 @@ func main() {
 		{"qty", 1},
 	}
 	// Querying paginated data
-	paginatedData, err := paginate.New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
+	paginatedData, err := paginate.New(collection).Limit(limit).Page(page).Sort("price", -1).Sort("qty", -1).Select(projection).Filter(filter).Find()
 	if err != nil {
 		panic(err)
 	}
