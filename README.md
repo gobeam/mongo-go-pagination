@@ -4,7 +4,8 @@
 
 For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. 
 
-
+:speaker: :speaker: 
+***For normal queries new feature have been added to directly pass struct and decode data without manual marshalling later. Only normal queries support this feature for now. Sort chaining is also added as new feature***
 ## Install
 
 ``` bash
@@ -64,7 +65,7 @@ func main() {
 	// you can easily chain function and pass multiple query like here we are passing match
 	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
+	aggPaginatedData, err := New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
 	if err != nil {
 		panic(err)
 	}
@@ -88,7 +89,6 @@ func main() {
 ```
 
 ## For Normal queries
-
 ``` go
 
 
@@ -111,30 +111,26 @@ func main() {
     	}
     	// Querying paginated data
     	// Sort and select are optional
-    	paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
+        // Multiple Sort chaining is also allowed
+        var products []Product
+    	paginatedData, err := New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Decode(&products).Find()
     	if err != nil {
     		panic(err)
     	}
     
-    	// paginated data is in paginatedData.Data
+    	// paginated data or paginatedData.Data will be nil because data is already decoded on through Decode function
     	// pagination info can be accessed in  paginatedData.Pagination
-    	// if you want to marshal data to your defined struct
-    
-    	var lists []Product
-    	for _, raw := range paginatedData.Data {
-    		var product *Product
-    		if marshallErr := bson.Unmarshal(raw, &product); marshallErr == nil {
-    			lists = append(lists, *product)
-    		}
-    
-    	}
     	// print ProductList
-    	fmt.Printf("Norm Find Data: %+v\n", lists)
+    	fmt.Printf("Normal Find Data: %+v\n", products)
     
     	// print pagination data
     	fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
 }
     
+```
+***Notice:***
+```go
+        paginatedData.data //it will be nil incase of  normal queries because data is already decoded on through Decode function
 ```
 
 ## Running the tests

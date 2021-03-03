@@ -37,25 +37,17 @@ func main() {
 		{"qty", 1},
 	}
 	// Querying paginated data
-	paginatedData, err := paginate.New(collection).Limit(limit).Page(page).Sort("price", -1).Sort("qty", -1).Select(projection).Filter(filter).Find()
+	var products []Product
+	paginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Sort("qty", -1).Select(projection).Filter(filter).Decode(&products).Find()
 	if err != nil {
 		panic(err)
 	}
 
 	// paginated data is in paginatedData.Data
 	// pagination info can be accessed in  paginatedData.Pagination
-	// if you want to marshal data to your defined struct
-
-	var lists []Product
-	for _, raw := range paginatedData.Data {
-		var product *Product
-		if marshallErr := bson.Unmarshal(raw, &product); marshallErr == nil {
-			lists = append(lists, *product)
-		}
-
-	}
+	//// if you want to marshal data to your defined struct
 	// print ProductList
-	fmt.Printf("Norm Find Data: %+v\n", lists)
+	fmt.Printf("Norm Find Data: %+v\n", products)
 
 	// print pagination data
 	fmt.Printf("Normal find pagination info: %+v\n", paginatedData.Pagination)
@@ -71,7 +63,7 @@ func main() {
 	// you can easily chain function and pass multiple query like here we are passing match
 	// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 	// because you can pass filters directly through Aggregate param
-	aggPaginatedData, err := paginate.New(collection).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
+	aggPaginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
 	if err != nil {
 		panic(err)
 	}
@@ -86,7 +78,7 @@ func main() {
 	}
 
 	// print ProductList
-	//fmt.Printf("Aggregate Product List: %+v\n", aggProductList)
+	fmt.Printf("Aggregate Product List: %+v\n", aggProductList)
 
 	// print pagination data
 	fmt.Printf("Aggregate Pagination Data: %+v\n", aggPaginatedData.Pagination)

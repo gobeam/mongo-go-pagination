@@ -65,7 +65,8 @@ func TestPagingQuery_Find(t *testing.T) {
 		{"status", 1},
 	}
 	collection := db.Collection(DatabaseCollection)
-	paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Find()
+	var todos []TodoTest
+	paginatedData, err := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Decode(&todos).Find()
 
 	if err != nil {
 		t.Errorf("Error while pagination. Error: %s", err.Error())
@@ -75,7 +76,7 @@ func TestPagingQuery_Find(t *testing.T) {
 		return
 	}
 
-	if len(paginatedData.Data) < 1 {
+	if len(todos) < 1 {
 		t.Errorf("Error fetching data")
 	}
 
