@@ -5,7 +5,7 @@
 For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. 
 
 :speaker: :speaker: 
-***For normal queries new feature have been added to directly pass struct and decode data without manual marshalling later. Only normal queries support this feature for now. Sort chaining is also added as new feature***
+***For normal queries new feature have been added to directly pass struct and decode data without manual unmarshalling later. Only normal queries support this feature for now. Sort chaining is also added as new feature***
 ## Install
 
 ``` bash
