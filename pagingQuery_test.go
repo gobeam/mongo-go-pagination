@@ -165,3 +165,37 @@ func connect() (a *mongo.Database, b *mongo.Client) {
 	var db = session.Database(DatabaseName)
 	return db, session
 }
+
+func TestGetSkip(t *testing.T) {
+	tc := []struct {
+		limit    int64
+		page     int64
+		expected int64
+	}{
+		{
+			limit:    10,
+			page:     -1,
+			expected: 0,
+		},
+		{
+			limit:    10,
+			page:     1,
+			expected: 0,
+		}, {
+			limit:    10,
+			page:     2,
+			expected: 9,
+		}, {
+			limit:    10,
+			page:     3,
+			expected: 19,
+		},
+	}
+
+	for _, tt := range tc {
+		skip := getSkip(tt.page, tt.limit)
+		if skip != tt.expected {
+			t.Fatalf("expected skip to be %d, got %d", tt.expected, skip)
+		}
+	}
+}
