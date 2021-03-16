@@ -157,7 +157,7 @@ Please make sure to update tests as appropriate.
 Copyright (c) 2020
 ```
 
-[Build-Status-Url]: https://travis-ci.org/gobeam/mongo-go-pagination
-[Build-Status-Image]: https://travis-ci.org/gobeam/mongo-go-pagination.svg?branch=master
+[Build-Status-Url]: https://travis-ci.com/gobeam/mongo-go-pagination
+[Build-Status-Image]: https://travis-ci.com/gobeam/mongo-go-pagination.svg?branch=master
 [godoc-url]: https://pkg.go.dev/github.com/gobeam/mongo-go-pagination?tab=doc
 [godoc-image]: https://godoc.org/github.com/gobeam/mongo-go-pagination?status.svg
