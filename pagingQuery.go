@@ -264,7 +264,7 @@ type PaginatedData struct {
 // getSkip return calculated skip value for query
 func getSkip(page, limit int64) int64 {
 	page--
-	skip := page  * limit
+	skip := page * limit
 	skip--
 
 	if skip <= 0 {

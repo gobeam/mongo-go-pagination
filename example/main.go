@@ -37,6 +37,11 @@ func main() {
 		{"qty", 1},
 	}
 	// Querying paginated data
+	// If you want to do some complex sort like sort by score(weight) for full text search fields you can do it easily
+	// sortValue := bson.M{
+	//		"$meta" : "textScore",
+	//	}
+	// paginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("score", sortValue)...
 	var products []Product
 	paginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Sort("qty", -1).Select(projection).Filter(filter).Decode(&products).Find()
 	if err != nil {
