@@ -3,13 +3,14 @@ package mongopagination
 import (
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"sync"
 	"testing"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type TodoTest struct {
@@ -184,11 +185,11 @@ func TestGetSkip(t *testing.T) {
 		}, {
 			limit:    10,
 			page:     2,
-			expected: 9,
+			expected: 10,
 		}, {
 			limit:    10,
 			page:     3,
-			expected: 19,
+			expected: 20,
 		},
 	}
 
