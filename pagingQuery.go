@@ -2,6 +2,7 @@ package mongopagination
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -265,7 +266,6 @@ type PaginatedData struct {
 func getSkip(page, limit int64) int64 {
 	page--
 	skip := page * limit
-	skip--
 
 	if skip <= 0 {
 		skip = 0
