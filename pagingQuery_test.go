@@ -47,57 +47,57 @@ func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 	return result.InsertedIDs, nil
 }
 
-//func TestPagingQuery_Find(t *testing.T) {
-//	_, session := NewConnection()
-//	db := session.Database(DatabaseName)
-//	defer cleanup(db)
-//	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-//	insertedIds, err := insertExamples(db)
-//	if len(insertedIds) < 1 {
-//		t.Errorf("Empty insert ids")
-//	}
-//	if err != nil {
-//		t.Errorf("Data insert error. Error: %s", err.Error())
-//	}
-//	filter := bson.M{}
-//	var limit int64 = 10
-//	var page int64
-//	projection := bson.D{
-//		{"title", 1},
-//		{"status", 1},
-//	}
-//	collection := db.Collection(DatabaseCollection)
-//	var todos []TodoTest
-//	paginatedData, err := New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Decode(&todos).Find()
-//
-//	if err != nil {
-//		t.Errorf("Error while pagination. Error: %s", err.Error())
-//	}
-//	if paginatedData == nil {
-//		t.Errorf("Empty Pagination data error")
-//		return
-//	}
-//
-//	if len(todos) < 1 {
-//		t.Errorf("Error fetching data")
-//	}
-//
-//	if paginatedData.Pagination.Total != 20 || paginatedData.Pagination.Page != 1 {
-//		t.Errorf("False Pagination data should be 20 but got: %d", paginatedData.Pagination.Total)
-//	}
-//
-//	// no limit or page provided error
-//	_, noLimitOrPageError := New(collection).Sort("price", -1).Select(projection).Filter(filter).Find()
-//	if noLimitOrPageError == nil {
-//		t.Errorf("Error expected but got no error")
-//	}
-//
-//	// no filter error
-//	_, noFilterError := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Find()
-//	if noFilterError == nil {
-//		t.Errorf("Error expected but got no error")
-//	}
-//}
+func TestPagingQuery_Find(t *testing.T) {
+	_, session := NewConnection()
+	db := session.Database(DatabaseName)
+	defer cleanup(db)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	insertedIds, err := insertExamples(db)
+	if len(insertedIds) < 1 {
+		t.Errorf("Empty insert ids")
+	}
+	if err != nil {
+		t.Errorf("Data insert error. Error: %s", err.Error())
+	}
+	filter := bson.M{}
+	var limit int64 = 10
+	var page int64
+	projection := bson.D{
+		{"title", 1},
+		{"status", 1},
+	}
+	collection := db.Collection(DatabaseCollection)
+	var todos []TodoTest
+	paginatedData, err := New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Select(projection).Filter(filter).Decode(&todos).Find()
+
+	if err != nil {
+		t.Errorf("Error while pagination. Error: %s", err.Error())
+	}
+	if paginatedData == nil {
+		t.Errorf("Empty Pagination data error")
+		return
+	}
+
+	if len(todos) < 1 {
+		t.Errorf("Error fetching data")
+	}
+
+	if paginatedData.Pagination.Total != 20 || paginatedData.Pagination.Page != 1 {
+		t.Errorf("False Pagination data should be 20 but got: %d", paginatedData.Pagination.Total)
+	}
+
+	// no limit or page provided error
+	_, noLimitOrPageError := New(collection).Sort("price", -1).Select(projection).Filter(filter).Find()
+	if noLimitOrPageError == nil {
+		t.Errorf("Error expected but got no error")
+	}
+
+	// no filter error
+	_, noFilterError := New(collection).Limit(limit).Page(page).Sort("price", -1).Select(projection).Find()
+	if noFilterError == nil {
+		t.Errorf("Error expected but got no error")
+	}
+}
 
 func TestPagingQuery_Aggregate(t *testing.T) {
 	_, session := NewConnection()
