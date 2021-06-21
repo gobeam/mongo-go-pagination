@@ -2,7 +2,7 @@
 [![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/gobeam/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/gobeam/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
 [![Coverage Status](https://coveralls.io/repos/github/gobeam/mongo-go-pagination/badge.png?branch=master)](https://coveralls.io/github/gobeam/mongo-go-pagination?branch=master)
 
-For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. View examples from (here)[https://github.com/gobeam/mongo-go-pagination/tree/master/example]
+For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. View examples from [here](https://github.com/gobeam/mongo-go-pagination/tree/master/example)
 
 :speaker: :speaker: 
 ***For normal queries new feature have been added to directly pass struct and decode data without manual unmarshalling later. Only normal queries support this feature for now. Sort chaining is also added as new feature***
