@@ -2,6 +2,9 @@
 [![Build][Build-Status-Image]][Build-Status-Url] [![Go Report Card](https://goreportcard.com/badge/github.com/gobeam/mongo-go-pagination?branch=master&kill_cache=1)](https://goreportcard.com/report/github.com/gobeam/mongo-go-pagination) [![GoDoc][godoc-image]][godoc-url]
 [![Coverage Status](https://coveralls.io/repos/github/gobeam/mongo-go-pagination/badge.png?branch=master)](https://coveralls.io/github/gobeam/mongo-go-pagination?branch=master)
 
+Example api response of Normal Query (click here](https://mongo-go-pagination.herokuapp.com/normal-pagination?page=1&limit=10).
+Example api response of Aggregate Query (click here](https://mongo-go-pagination.herokuapp.com/aggregate-pagination?page=1&limit=10).
+
 For all your simple query to aggregation pipeline this is simple and easy to use Pagination driver with information like Total, Page, PerPage, Prev, Next, TotalPage and your actual mongo result. View examples from [here](https://github.com/gobeam/mongo-go-pagination/tree/master/example)
 
 :speaker: :speaker: 
