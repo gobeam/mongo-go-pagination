@@ -60,7 +60,7 @@ func Paging(p *pagingQuery, paginationInfo chan<- *Paginator, aggregate bool, ag
 	}
 
 	if p.PageCount > 0 {
-		offset = (p.PageCount - 1) * p.LimitCount
+		offset = ((p.PageCount - 1) * p.LimitCount) + 1
 	} else {
 		offset = 0
 	}
