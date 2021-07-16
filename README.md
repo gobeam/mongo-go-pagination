@@ -7,9 +7,9 @@ For all your simple query to aggregation pipeline this is simple and easy to use
 :speaker: :speaker: 
 ***For normal queries new feature have been added to directly pass struct and decode data without manual unmarshalling later. Only normal queries support this feature for now. Sort chaining is also added as new feature***
 
-Example api response of Normal Query [click here](https://mongo-go-pagination.herokuapp.com/normal-pagination?page=1&limit=10).
-Example api response of Aggregate Query [click here](https://mongo-go-pagination.herokuapp.com/aggregate-pagination?page=1&limit=10).
-View code from [here](https://github.com/gobeam/mongo-go-pagination/tree/master/example)
+Example api response of Normal Query [click here](https://mongo-go-pagination.herokuapp.com/normal-pagination?page=1&limit=10).<br>
+Example api response of Aggregate Query [click here](https://mongo-go-pagination.herokuapp.com/aggregate-pagination?page=1&limit=10).<br>
+View code used in this example from [here](https://github.com/gobeam/mongo-go-pagination/tree/master/example)
 
 ## Install
 
