@@ -159,12 +159,11 @@ func (paging *pagingQuery) Aggregate(filters ...interface{}) (paginatedData *Pag
 	}
 	skip := getSkip(paging.PageCount, paging.LimitCount)
 	var facetData []bson.M
-	facetData = append(facetData, bson.M{"$skip": skip})
-	facetData = append(facetData, bson.M{"$limit": paging.LimitCount})
-
 	if len(paging.SortFields) > 0 {
 		facetData = append(facetData, bson.M{"$sort": paging.SortFields})
 	}
+	facetData = append(facetData, bson.M{"$skip": skip})
+	facetData = append(facetData, bson.M{"$limit": paging.LimitCount})
 
 	//if paging.SortField != "" {
 	//	facetData = append(facetData, bson.M{"$sort": bson.M{paging.SortField: paging.SortValue}})

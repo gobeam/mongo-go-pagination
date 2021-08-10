@@ -27,8 +27,8 @@ func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 	for i := 0; i < 30; i++ {
 		data = append(data, bson.M{
 			"name":     fmt.Sprintf("product-%d", i),
-			"quantity":    float64(i),
-			"price": float64(i*10+5),
+			"quantity": float64(i),
+			"price":    float64(i*10 + 5),
 		})
 	}
 	result, err := db.Collection("products").InsertMany(
@@ -82,11 +82,11 @@ func main() {
 		}
 
 		payload := struct {
-			Data []Product `json:"data"`
+			Data       []Product               `json:"data"`
 			Pagination paginate.PaginationData `json:"pagination"`
 		}{
 			Pagination: paginatedData.Pagination,
-			Data: products,
+			Data:       products,
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -109,7 +109,7 @@ func main() {
 		// you can easily chain function and pass multiple query like here we are passing match
 		// query and projection query as params in Aggregate function you cannot use filter with Aggregate
 		// because you can pass filters directly through Aggregate param
-		aggPaginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Aggregate( match,projectQuery)
+		aggPaginatedData, err := paginate.New(collection).Context(ctx).Limit(limit).Page(page).Sort("price", -1).Aggregate(match, projectQuery)
 		if err != nil {
 			panic(err)
 		}
@@ -124,11 +124,11 @@ func main() {
 		}
 
 		payload := struct {
-			Data []Product `json:"data"`
+			Data       []Product               `json:"data"`
 			Pagination paginate.PaginationData `json:"pagination"`
 		}{
 			Pagination: aggPaginatedData.Pagination,
-			Data: aggProductList,
+			Data:       aggProductList,
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
