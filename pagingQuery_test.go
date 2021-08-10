@@ -47,6 +47,24 @@ func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 	return result.InsertedIDs, nil
 }
 
+func insertExamplesAtIntervals(db *mongo.Database, interval time.Duration) (insertedIds []interface{}, err error) {
+	var data []interface{}
+	for i := 0; i < 20; i++ {
+		time.Sleep(interval)
+		data = append(data, bson.M{
+			"title":     fmt.Sprintf("todo-%d", i),
+			"status":    "active",
+			"createdAt": time.Now(),
+		})
+	}
+	result, err := db.Collection(DatabaseCollection).InsertMany(
+		context.Background(), data)
+	if err != nil {
+		return nil, err
+	}
+	return result.InsertedIDs, nil
+}
+
 func TestPagingQuery_Find(t *testing.T) {
 	_, session := NewConnection()
 	db := session.Database(DatabaseName)
@@ -221,6 +239,64 @@ func TestGetSkip(t *testing.T) {
 		skip := getSkip(tt.page, tt.limit)
 		if skip != tt.expected {
 			t.Fatalf("expected skip to be %d, got %d", tt.expected, skip)
+		}
+	}
+}
+
+func TestSortFirst(t *testing.T) {
+	_, session := NewConnection()
+	db := session.Database(DatabaseName)
+	collection := db.Collection(DatabaseCollection)
+	defer cleanup(db)
+	insertedIds, err := insertExamplesAtIntervals(db, 100*time.Millisecond) // need clear intervals for check
+	if len(insertedIds) < 1 {
+		t.Errorf("Empty insert ids")
+	}
+	if err != nil {
+		t.Errorf("Data insert error. Error: %s", err.Error())
+	}
+	var queries []interface{}
+	var sortAfterLimitDocs, sortBeforeLimitDocs []map[string]interface{}
+
+	// setSortFirst=false
+	sortAfterLimit := New(collection).Limit(10).Page(1).Sort("createdAt", -1)
+	paginatedData, err := sortAfterLimit.Aggregate(queries...)
+	if err != nil {
+		panic(err)
+	}
+	for _, raw := range paginatedData.Data {
+		doc := make(map[string]interface{})
+		if marshallErr := bson.Unmarshal(raw, &doc); marshallErr == nil {
+			sortAfterLimitDocs = append(sortAfterLimitDocs, doc)
+		}
+	}
+	fmt.Printf("\nSort After Limit, Descending By CreatedAt\n")
+	descending := 10 // result should be 10 to 1
+	for i, doc := range sortAfterLimitDocs {
+		fmt.Printf("Title : %v CreatedAt : %v\n ", doc["title"], doc["createdAt"])
+		if doc["title"].(string) != fmt.Sprintf(fmt.Sprintf("todo-%d", descending-i)) {
+			t.Error()
+		}
+	}
+
+	// setSortFirst=true
+	sortBeforeLimit := New(collection).Limit(10).Page(1).Sort("createdAt", -1).SetSortFirst(true)
+	paginatedData, err = sortBeforeLimit.Aggregate(queries...)
+	if err != nil {
+		panic(err)
+	}
+	for _, raw := range paginatedData.Data {
+		doc := make(map[string]interface{})
+		if marshallErr := bson.Unmarshal(raw, &doc); marshallErr == nil {
+			sortBeforeLimitDocs = append(sortBeforeLimitDocs, doc)
+		}
+	}
+	fmt.Printf("\nSort Before Limit, Descending By CreatedAt\n")
+	descending = 20 // result should be 20 to 11
+	for i, doc := range sortBeforeLimitDocs {
+		fmt.Printf("Title : %v CreatedAt : %v\n ", doc["title"], doc["createdAt"])
+		if doc["title"].(string) != fmt.Sprintf(fmt.Sprintf("todo-%d", descending-i)) {
+			t.Error()
 		}
 	}
 }
