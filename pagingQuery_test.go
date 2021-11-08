@@ -3,14 +3,14 @@ package mongopagination
 import (
 	"context"
 	"fmt"
-	"log"
-	"sync"
-	"testing"
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"strings"
+	"sync"
+	"testing"
+	"time"
 )
 
 type TodoTest struct {
@@ -45,6 +45,75 @@ func insertExamples(db *mongo.Database) (insertedIds []interface{}, err error) {
 		return nil, err
 	}
 	return result.InsertedIDs, nil
+}
+
+func insertExamplesForSortingTest(db *mongo.Database) (insertedIds []interface{}, err error) {
+	var data []interface{}
+	data = append(data, bson.M{"title": "a"})
+	data = append(data, bson.M{"title": "c"})
+	data = append(data, bson.M{"title": "b"})
+	data = append(data, bson.M{"title": "A"})
+	data = append(data, bson.M{"title": "C"})
+	data = append(data, bson.M{"title": "B"})
+	result, err := db.Collection(DatabaseCollection).InsertMany(
+		context.Background(), data)
+	if err != nil {
+		return nil, err
+	}
+	return result.InsertedIDs, nil
+}
+
+func TestPagingQuery_FindWithCollation(t *testing.T) {
+	_, session := NewConnection()
+	db := session.Database(DatabaseName)
+	defer cleanup(db)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	insertedIds, err := insertExamplesForSortingTest(db)
+	if len(insertedIds) < 1 {
+		t.Errorf("Empty insert ids")
+	}
+	if err != nil {
+		t.Errorf("Data insert error. Error: %s", err.Error())
+	}
+	filter := bson.M{}
+	var limit int64 = 10
+	var page int64
+	collection := db.Collection(DatabaseCollection)
+	var todos []TodoTest
+
+	collation := options.Collation{
+		Locale:    "en",
+		CaseLevel: true,
+	}
+
+	paginatedData, err := New(collection).SetCollation(&collation).Context(ctx).Limit(limit).Page(page).Sort("title", 1).Filter(filter).Decode(&todos).Find()
+
+	if err != nil {
+		t.Errorf("Error while pagination. Error: %s", err.Error())
+	}
+	if paginatedData == nil {
+		t.Errorf("Empty Pagination data error")
+		return
+	}
+
+	if len(todos) < 1 {
+		t.Errorf("Error fetching data")
+	}
+
+	if paginatedData.Pagination.Total != 6 || paginatedData.Pagination.Page != 1 {
+		t.Errorf("False Pagination data should be 6 but got: %d", paginatedData.Pagination.Total)
+	}
+
+	//Check if all title are in the right order
+	if !strings.EqualFold(todos[0].Title, "a") || !strings.EqualFold(todos[1].Title, "a") {
+		t.Errorf("Index 0 and 1 should be a and A. But index 0 was %s and index 1 was %s", todos[0].Title, todos[1].Title)
+	}
+	if !strings.EqualFold(todos[2].Title, "b") || !strings.EqualFold(todos[3].Title, "b") {
+		t.Errorf("Index 2 and 3 should be b and B. But index 2 was %s and index 3 was %s", todos[2].Title, todos[3].Title)
+	}
+	if !strings.EqualFold(todos[4].Title, "c") || !strings.EqualFold(todos[5].Title, "c") {
+		t.Errorf("Index 4 and 5 should be c and C. But index 4 was %s and index 5 was %s", todos[4].Title, todos[5].Title)
+	}
 }
 
 func TestPagingQuery_Find(t *testing.T) {
