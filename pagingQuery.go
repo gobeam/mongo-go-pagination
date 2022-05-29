@@ -162,7 +162,12 @@ func (paging *pagingQuery) Aggregate(filters ...interface{}) (paginatedData *Pag
 	var aggregationFilter []bson.M
 	// combining user sent queries
 	for _, filter := range filters {
-		aggregationFilter = append(aggregationFilter, filter.(bson.M))
+		switch v := filter.(type) {
+		case []bson.M:
+			aggregationFilter = v
+		default:
+			aggregationFilter = append(aggregationFilter, filter.(bson.M))
+		}
 	}
 	skip := getSkip(paging.PageCount, paging.LimitCount)
 	var facetData []bson.M
