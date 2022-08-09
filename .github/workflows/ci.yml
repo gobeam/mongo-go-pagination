@@ -1,0 +1,30 @@
+name: Mongo Go Pagination run test
+
+on: push
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Test
+        run: go test -v ./...
