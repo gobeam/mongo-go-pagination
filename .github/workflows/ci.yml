@@ -1,14 +1,11 @@
-name: Continuous Integration Testing
+name: Mongo Go Pagination run test
 
 on: push
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        go-version: [ 1.18.x, 1.19.x ]
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-    runs-on: ${{ matrix.os }}
+
+  build:
+    runs-on: ubuntu-latest
 
     services:
       mongodb:
@@ -22,8 +19,12 @@ jobs:
           - 27017:27017
 
     steps:
-      - uses: actions/setup-go@v2
-        with:
-          go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v2
-      - run: go test ./...
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Test
+        run: go test -v ./...
